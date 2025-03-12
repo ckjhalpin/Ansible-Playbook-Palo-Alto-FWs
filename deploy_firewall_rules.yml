@@ -1,0 +1,21 @@
+---
+- name: Deploy and Modify Firewall Rules
+  hosts: palo_alto
+  gather_facts: no
+  collections:
+    - paloaltonetworks.panos
+  tasks:
+    - name: Add a security rule to block risky IPs
+      panos_security_rule:
+        provider:
+          ip_address: "{{ ansible_host }}"
+          username: "admin"
+          password: "admin_password"
+        rule_name: "Block Risky IPs"
+        source_zone: ["untrust"]
+        destination_zone: ["trust"]
+        source_ip: ["192.168.1.100"]
+        destination_ip: ["any"]
+        application: ["any"]
+        action: "deny"
+        state: "present"
